@@ -18,6 +18,7 @@
         </properties>
         <class>kz.ya.authcore.entity.User</class>
         <class>kz.ya.authcore.entity.ApiToken</class>
+        <class>kz.ya.authcore.entity.History</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
     </persistence-unit>
 </persistence>

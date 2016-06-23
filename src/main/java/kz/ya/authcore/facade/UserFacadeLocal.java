@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kz.ya.authcore.bean;
+package kz.ya.authcore.facade;
 
 import java.util.List;
 import javax.ejb.Local;
@@ -31,4 +31,6 @@ public interface UserFacadeLocal {
     List<User> findRange(int[] range);
 
     int count();
+    
+    User find(String email);
 }

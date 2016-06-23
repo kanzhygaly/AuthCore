@@ -1,4 +1,4 @@
-package kz.ya.authcore.bean;
+package kz.ya.authcore.facade;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;

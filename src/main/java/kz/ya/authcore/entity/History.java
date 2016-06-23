@@ -9,51 +9,57 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Date;
 import java.util.Objects;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 /**
  *
  * @author YERLAN
  */
-@Entity(name = "user")
-@NamedQueries({
-    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
-    @NamedQuery(name = "User.findByToken", query = "SELECT u FROM User u WHERE u.token.value = :token")})
-public class User implements Externalizable {
-
+@Entity(name = "history")
+public class History implements Externalizable {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
-
+    
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
+    
     @NotNull
     @Column(name = "email", nullable = false)
-    private String email;
-
+    private String value;
+    
     @NotNull
-    @Column(name = "password", nullable = false)
-    private String password;
+    @Column(name = "date_start", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateStart;
+    
+    @NotNull
+    @Column(name = "date_end", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateEnd;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private ApiToken token;
-
-    public User() {
+    public History() {
     }
 
-    public User(String email, String password) {
-        this.email = email;
-        this.password = password;
+    public History(String value, Date dateStart, Date dateEnd) {
+        this.value = value;
+        this.dateStart = dateStart;
+        this.dateEnd = dateEnd;
     }
 
     public Long getId() {
@@ -64,42 +70,42 @@ public class User implements Externalizable {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public User getUser() {
+        return user;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getPassword() {
-        return password;
+    public String getValue() {
+        return value;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    public ApiToken getToken() {
-        return token;
+    public Date getDateStart() {
+        return dateStart;
     }
 
-    public void setToken(ApiToken token) {
-        token.setUser(this);
-        this.token = token;
+    public void setDateStart(Date dateStart) {
+        this.dateStart = dateStart;
     }
 
-    public void removeToken() {
-        if (token != null) {
-            token.setUser(null);
-            this.token = null;
-        }
+    public Date getDateEnd() {
+        return dateEnd;
+    }
+
+    public void setDateEnd(Date dateEnd) {
+        this.dateEnd = dateEnd;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 47 * hash + Objects.hashCode(this.id);
+        hash = 29 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -114,23 +120,25 @@ public class User implements Externalizable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final User other = (User) obj;
+        final History other = (History) obj;
         return Objects.equals(this.id, other.id);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeLong(id);
-        out.writeObject(email);
-        out.writeObject(password);
-        out.writeObject(token);
+        out.writeObject(user);
+        out.writeObject(value);
+        out.writeObject(dateStart);
+        out.writeObject(dateEnd);
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         id = in.readLong();
-        email = (String) in.readObject();
-        password = (String) in.readObject();
-        token = (ApiToken) in.readObject();
+        user = (User) in.readObject();
+        value = (String) in.readObject();
+        dateStart = (Date) in.readObject();
+        dateEnd = (Date) in.readObject();
     }
 }
