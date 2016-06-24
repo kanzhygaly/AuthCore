@@ -12,7 +12,6 @@ import javax.ejb.Stateless;
 import javax.security.auth.login.LoginException;
 import kz.ya.authcore.entity.ApiToken;
 import kz.ya.authcore.entity.User;
-import kz.ya.authcore.facade.ApiTokenFacadeLocal;
 import kz.ya.authcore.facade.UserFacadeLocal;
 
 /**
@@ -24,8 +23,6 @@ public class AuthService implements AuthServiceLocal {
 
     @EJB
     private UserFacadeLocal userFacade;
-    @EJB
-    private ApiTokenFacadeLocal apiTokenFacade;
 
     @Override
     public ApiToken login(String username, String password) throws LoginException {
@@ -56,14 +53,5 @@ public class AuthService implements AuthServiceLocal {
             return user.getToken();
         }
         throw new LoginException("Don't Come Here Again!");
-    }
-
-    @Override
-    public boolean isAuthTokenValid(String authToken) {
-        ApiToken token = apiTokenFacade.find(authToken);
-        if (token != null) {
-            return true;
-        }
-        return false;
     }
 }

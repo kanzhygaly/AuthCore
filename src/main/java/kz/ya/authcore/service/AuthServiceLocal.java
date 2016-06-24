@@ -17,13 +17,4 @@ import kz.ya.authcore.entity.ApiToken;
 public interface AuthServiceLocal {
     
     ApiToken login(String username, String password) throws LoginException;
-    
-    /**
-     * The method that pre-validates if the client which invokes the websocket is
-     * from an authorized and authenticated source.
-     *
-     * @param authToken The authorization token generated after login
-     * @return TRUE for acceptance and FALSE for denied.
-     */
-    boolean isAuthTokenValid(String authToken);
 }
