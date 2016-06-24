@@ -16,6 +16,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,34 +28,35 @@ import javax.validation.constraints.NotNull;
  * @author YERLAN
  */
 @Entity(name = "api_token")
+@NamedQueries({
+    @NamedQuery(name = "ApiToken.findByValue", query = "SELECT t FROM ApiToken t WHERE t.value = :value")
+})
 public class ApiToken implements Externalizable {
-    
+
     @Id
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
-    
+
     @NotNull
-    @Column(name = "email", nullable = false)
+    @Column(name = "value", nullable = false)
     private String value;
-    
+
     @NotNull
-    @Column(name = "date_start", nullable = false)
+    @Column(name = "date_issue", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateStart;
-    
+    private Date dateIssue;
+
     @NotNull
-    @Column(name = "date_end", nullable = false)
+    @Column(name = "date_expire", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateEnd;
+    private Date dateExpire;
 
     public ApiToken() {
     }
 
-    public ApiToken(String value, Date dateStart, Date dateEnd) {
-        this.value = value;
-        this.dateStart = dateStart;
-        this.dateEnd = dateEnd;
+    public ApiToken(User user) {
+        this.user = user;
     }
 
     public User getUser() {
@@ -72,20 +75,20 @@ public class ApiToken implements Externalizable {
         this.value = value;
     }
 
-    public Date getDateStart() {
-        return dateStart;
+    public Date getDateIssue() {
+        return dateIssue;
     }
 
-    public void setDateStart(Date dateStart) {
-        this.dateStart = dateStart;
+    public void setDateIssue(Date dateIssue) {
+        this.dateIssue = dateIssue;
     }
 
-    public Date getDateEnd() {
-        return dateEnd;
+    public Date getDateExpire() {
+        return dateExpire;
     }
 
-    public void setDateEnd(Date dateEnd) {
-        this.dateEnd = dateEnd;
+    public void setDateExpire(Date dateExpire) {
+        this.dateExpire = dateExpire;
     }
 
     @Override
@@ -114,15 +117,15 @@ public class ApiToken implements Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeObject(user);
         out.writeObject(value);
-        out.writeObject(dateStart);
-        out.writeObject(dateEnd);
+        out.writeObject(dateIssue);
+        out.writeObject(dateExpire);
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         user = (User) in.readObject();
         value = (String) in.readObject();
-        dateStart = (Date) in.readObject();
-        dateEnd = (Date) in.readObject();
+        dateIssue = (Date) in.readObject();
+        dateExpire = (Date) in.readObject();
     }
 }

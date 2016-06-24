@@ -24,8 +24,8 @@ public class HistoryFacade extends AbstractFacade<Long, History> implements Hist
 
             History fromDB = (History) entityManager.find(History.class, entity.getId());
             fromDB.setValue(entity.getValue());
-            fromDB.setDateStart(entity.getDateStart());
-            fromDB.setDateEnd(entity.getDateEnd());
+            fromDB.setDateIssue(entity.getDateIssue());
+            fromDB.setDateExpire(entity.getDateExpire());
 
             entityManager.getTransaction().commit();
         } catch (Exception ex) {

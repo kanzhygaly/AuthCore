@@ -40,26 +40,32 @@ public class History implements Externalizable {
     private User user;
     
     @NotNull
-    @Column(name = "email", nullable = false)
+    @Column(name = "value", nullable = false)
     private String value;
     
     @NotNull
-    @Column(name = "date_start", nullable = false)
+    @Column(name = "date_issue", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateStart;
+    private Date dateIssue;
     
     @NotNull
-    @Column(name = "date_end", nullable = false)
+    @Column(name = "date_expire", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateEnd;
+    private Date dateExpire;
+    
+    @NotNull
+    @Column(name = "created", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
 
     public History() {
     }
 
-    public History(String value, Date dateStart, Date dateEnd) {
+    public History(User user, String value, Date dateIssue, Date dateExpire) {
+        this.user = user;
         this.value = value;
-        this.dateStart = dateStart;
-        this.dateEnd = dateEnd;
+        this.dateIssue = dateIssue;
+        this.dateExpire = dateExpire;
     }
 
     public Long getId() {
@@ -86,20 +92,28 @@ public class History implements Externalizable {
         this.value = value;
     }
 
-    public Date getDateStart() {
-        return dateStart;
+    public Date getDateIssue() {
+        return dateIssue;
     }
 
-    public void setDateStart(Date dateStart) {
-        this.dateStart = dateStart;
+    public void setDateIssue(Date dateIssue) {
+        this.dateIssue = dateIssue;
     }
 
-    public Date getDateEnd() {
-        return dateEnd;
+    public Date getDateExpire() {
+        return dateExpire;
     }
 
-    public void setDateEnd(Date dateEnd) {
-        this.dateEnd = dateEnd;
+    public void setDateExpire(Date dateExpire) {
+        this.dateExpire = dateExpire;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
     @Override
@@ -129,8 +143,9 @@ public class History implements Externalizable {
         out.writeLong(id);
         out.writeObject(user);
         out.writeObject(value);
-        out.writeObject(dateStart);
-        out.writeObject(dateEnd);
+        out.writeObject(dateIssue);
+        out.writeObject(dateExpire);
+        out.writeObject(created);
     }
 
     @Override
@@ -138,7 +153,8 @@ public class History implements Externalizable {
         id = in.readLong();
         user = (User) in.readObject();
         value = (String) in.readObject();
-        dateStart = (Date) in.readObject();
-        dateEnd = (Date) in.readObject();
+        dateIssue = (Date) in.readObject();
+        dateExpire = (Date) in.readObject();
+        created = (Date) in.readObject();
     }
 }

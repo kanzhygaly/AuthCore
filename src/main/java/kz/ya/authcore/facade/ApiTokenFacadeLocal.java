@@ -32,4 +32,6 @@ public interface ApiTokenFacadeLocal {
     List<ApiToken> findRange(int[] range);
 
     int count();
+    
+    ApiToken find(String value);
 }

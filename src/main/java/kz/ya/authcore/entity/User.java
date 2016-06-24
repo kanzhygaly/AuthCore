@@ -29,7 +29,8 @@ import javax.validation.constraints.NotNull;
 @Entity(name = "user")
 @NamedQueries({
     @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
-    @NamedQuery(name = "User.findByToken", query = "SELECT u FROM User u WHERE u.token.value = :token")})
+    @NamedQuery(name = "User.findByToken", query = "SELECT u FROM User u WHERE u.token.value = :token")
+})
 public class User implements Externalizable {
 
     @Id
@@ -38,7 +39,7 @@ public class User implements Externalizable {
     private Long id;
 
     @NotNull
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @NotNull

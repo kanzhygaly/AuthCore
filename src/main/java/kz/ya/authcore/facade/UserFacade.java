@@ -42,8 +42,8 @@ public class UserFacade extends AbstractFacade<Long, User> implements UserFacade
         try {
             entityManager.getTransaction().begin();
 
-            Query query = entityManager.createNamedQuery("User.findById");
-            query.setParameter("id", email);
+            Query query = entityManager.createNamedQuery("User.findByEmail");
+            query.setParameter("email", email);
             List<User> users = query.getResultList();
             if (!users.isEmpty()) {
                 user = users.get(0);
