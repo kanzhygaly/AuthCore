@@ -19,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -27,7 +28,8 @@ import javax.validation.constraints.NotNull;
  *
  * @author YERLAN
  */
-@Entity(name = "api_token")
+@Entity
+@Table(name = "api_token")
 @NamedQueries({
     @NamedQuery(name = "ApiToken.findByValue", query = "SELECT t FROM ApiToken t WHERE t.value = :value")
 })

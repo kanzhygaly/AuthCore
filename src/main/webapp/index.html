@@ -15,7 +15,7 @@
         <div id="messages"></div>
 
         <script type="text/javascript">
-            var webSocket = new WebSocket('ws://localhost:9090/authcore-1.0/wsauth');
+            var webSocket = new WebSocket('ws://localhost:8080/authcore-1.0/wsauth');
 
             webSocket.onerror = function (event) {
                 onError(event)

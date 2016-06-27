@@ -5,20 +5,24 @@
     <persistence-unit name="auth_pu" transaction-type="RESOURCE_LOCAL">
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:web_catalog;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"/>
-            <property name="javax.persistence.jdbc.user" value="admin"/>
-            <property name="javax.persistence.jdbc.password" value="admin"/>
-            <property name="hibernate.connection.pool_size" value="1"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
-            <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.format_sql" value="true"/>
-            <property name="hibernate.use_sql_comments" value="true"/>
-            <property name="hibernate.temp.use_jdbc_metadata_defaults" value="false"/>
-            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:web_catalog;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE" />
+            <property name="javax.persistence.jdbc.user" value="admin" />
+            <property name="javax.persistence.jdbc.password" value="admin" />
+            
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="true" />
+            <property name="hibernate.use_sql_comments" value="true" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+            <property name="hibernate.hbm2ddl.auto" value="create-drop" />
+            
+            <property name="hibernate.connection.pool_size" value="1" />
+            <property name="hibernate.temp.use_jdbc_metadata_defaults" value="false" />
         </properties>
+        
         <class>kz.ya.authcore.entity.User</class>
         <class>kz.ya.authcore.entity.ApiToken</class>
         <class>kz.ya.authcore.entity.History</class>
+        
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
     </persistence-unit>
 </persistence>
