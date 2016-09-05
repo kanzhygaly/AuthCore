@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kz.ya.authcore.service;
+package kz.ya.authcore.facade;
 
 import java.util.Calendar;
 import java.util.UUID;
@@ -12,24 +12,24 @@ import javax.ejb.Stateless;
 import javax.security.auth.login.LoginException;
 import kz.ya.authcore.entity.ApiToken;
 import kz.ya.authcore.entity.User;
-import kz.ya.authcore.facade.UserFacadeLocal;
+import kz.ya.authcore.dao.UserDaoLocal;
 
 /**
  *
  * @author YERLAN
  */
 @Stateless
-public class AuthService implements AuthServiceLocal {
+public class AuthFacade implements AuthFacadeLocal {
 
     @EJB
-    private UserFacadeLocal userFacade;
+    private UserDaoLocal userDao;
 
     @Override
     public ApiToken login(String username, String password) throws LoginException {
         if (username == null || password == null) {
             throw new LoginException("Not null values are expected!");
         }
-        User user = userFacade.find(username);
+        User user = userDao.find(username);
         if (user != null && user.getPassword().equals(password)) {
             /**
              * Once all params are matched, the authToken will be generated and

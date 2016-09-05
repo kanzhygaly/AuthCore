@@ -1,4 +1,4 @@
-package kz.ya.authcore.facade;
+package kz.ya.authcore.dao;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -20,11 +20,11 @@ import javax.validation.ValidatorFactory;
  * @param <PK>
  * @param <T>
  */
-public abstract class AbstractFacade<PK extends Serializable, T> {
+public abstract class AbstractDao<PK extends Serializable, T> {
 
     private final Class<T> entityClass;
 
-    public AbstractFacade() {
+    public AbstractDao() {
         this.entityClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
     }
 
@@ -59,7 +59,7 @@ public abstract class AbstractFacade<PK extends Serializable, T> {
         }
         return entity;
     }
-    
+
     public abstract void update(T entity);
 
     public void delete(T entity) {
@@ -78,89 +78,37 @@ public abstract class AbstractFacade<PK extends Serializable, T> {
     }
 
     public T find(PK key) {
-        T entity = null;
-        EntityManager entityManager = getEntityManager();
-        try {
-            entityManager.getTransaction().begin();
-
-            entity = (T) entityManager.find(entityClass, key);
-
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-        }
-        return entity;
+        return (T) getEntityManager().find(entityClass, key);
     }
 
     public T findForUpdate(PK key) {
-        T entity = null;
-        EntityManager entityManager = getEntityManager();
-        try {
-            entityManager.getTransaction().begin();
-
-            entity = (T) entityManager.find(entityClass, key, LockModeType.PESSIMISTIC_WRITE);
-
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-        }
-        return entity;
+        return (T) getEntityManager().find(entityClass, key, LockModeType.PESSIMISTIC_WRITE);
     }
 
     public List<T> findAll() {
-        List<T> list = null;
         EntityManager entityManager = getEntityManager();
-        try {
-            entityManager.getTransaction().begin();
-
-            javax.persistence.criteria.CriteriaQuery cq = entityManager.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(entityClass));
-            list = entityManager.createQuery(cq).getResultList();
-
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-        }
-        return list;
+        javax.persistence.criteria.CriteriaQuery cq = entityManager.getCriteriaBuilder().createQuery();
+        cq.select(cq.from(entityClass));
+        return entityManager.createQuery(cq).getResultList();
     }
 
     public List<T> findRange(int[] range) {
-        List<T> list = null;
         EntityManager entityManager = getEntityManager();
-        try {
-            entityManager.getTransaction().begin();
-
-            javax.persistence.criteria.CriteriaQuery cq = entityManager.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(entityClass));
-            javax.persistence.Query q = entityManager.createQuery(cq);
-            q.setMaxResults(range[1] - range[0] + 1);
-            q.setFirstResult(range[0]);
-            list = q.getResultList();
-
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-        }
-        return list;
+        javax.persistence.criteria.CriteriaQuery cq = entityManager.getCriteriaBuilder().createQuery();
+        cq.select(cq.from(entityClass));
+        javax.persistence.Query q = entityManager.createQuery(cq);
+        q.setMaxResults(range[1] - range[0] + 1);
+        q.setFirstResult(range[0]);
+        return q.getResultList();
     }
 
     public int count() {
-        int count = 0;
         EntityManager entityManager = getEntityManager();
-        try {
-            entityManager.getTransaction().begin();
-
-            javax.persistence.criteria.CriteriaQuery cq = entityManager.getCriteriaBuilder().createQuery();
-            javax.persistence.criteria.Root<T> rt = cq.from(entityClass);
-            cq.select(entityManager.getCriteriaBuilder().count(rt));
-            javax.persistence.Query q = entityManager.createQuery(cq);
-            count = ((Long) q.getSingleResult()).intValue();
-
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-        }
-        return count;
+        javax.persistence.criteria.CriteriaQuery cq = entityManager.getCriteriaBuilder().createQuery();
+        javax.persistence.criteria.Root<T> rt = cq.from(entityClass);
+        cq.select(entityManager.getCriteriaBuilder().count(rt));
+        javax.persistence.Query q = entityManager.createQuery(cq);
+        return ((Long) q.getSingleResult()).intValue();
     }
 
     /**

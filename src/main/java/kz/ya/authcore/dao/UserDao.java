@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kz.ya.authcore.facade;
+package kz.ya.authcore.dao;
 
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import static kz.ya.authcore.facade.AbstractFacade.getEntityManager;
+import static kz.ya.authcore.dao.AbstractDao.getEntityManager;
 import kz.ya.authcore.entity.User;
 
 /**
@@ -17,8 +17,8 @@ import kz.ya.authcore.entity.User;
  * @author YERLAN
  */
 @Stateless
-public class UserFacade extends AbstractFacade<Long, User> implements UserFacadeLocal {
-
+public class UserDao extends AbstractDao<Long, User> implements UserDaoLocal {
+    
     @Override
     public void update(User entity) {
         EntityManager entityManager = getEntityManager();
@@ -38,20 +38,11 @@ public class UserFacade extends AbstractFacade<Long, User> implements UserFacade
     @Override
     public User find(String email) {
         User user = null;
-        EntityManager entityManager = getEntityManager();
-        try {
-            entityManager.getTransaction().begin();
-
-            Query query = entityManager.createNamedQuery("User.findByEmail");
-            query.setParameter("email", email);
-            List<User> users = query.getResultList();
-            if (!users.isEmpty()) {
-                user = users.get(0);
-            }
-
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
+        Query query = getEntityManager().createNamedQuery("User.findByEmail");
+        query.setParameter("email", email);
+        List<User> users = query.getResultList();
+        if (!users.isEmpty()) {
+            user = users.get(0);
         }
         return user;
     }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kz.ya.authcore.facade;
+package kz.ya.authcore.dao;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -14,7 +14,7 @@ import kz.ya.authcore.entity.History;
  * @author YERLAN
  */
 @Stateless
-public class HistoryFacade extends AbstractFacade<Long, History> implements HistoryFacadeLocal {
+public class HistoryDao extends AbstractDao<Long, History> implements HistoryDaoLocal {
 
     @Override
     public void update(History entity) {

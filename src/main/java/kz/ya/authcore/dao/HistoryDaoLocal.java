@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kz.ya.authcore.facade;
+package kz.ya.authcore.dao;
 
 import java.util.List;
 import javax.ejb.Local;
@@ -14,7 +14,7 @@ import kz.ya.authcore.entity.History;
  * @author YERLAN
  */
 @Local
-public interface HistoryFacadeLocal {
+public interface HistoryDaoLocal {
 
     History save(History token);
 
