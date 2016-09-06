@@ -8,10 +8,10 @@ package kz.ya.authcore.dao;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import kz.ya.authcore.entity.ApiToken;
 import kz.ya.authcore.entity.User;
-import static kz.ya.authcore.dao.AbstractDao.getEntityManager;
 
 /**
  *
@@ -19,6 +19,14 @@ import static kz.ya.authcore.dao.AbstractDao.getEntityManager;
  */
 @Stateless
 public class ApiTokenDao extends AbstractDao<User, ApiToken> implements ApiTokenDaoLocal {
+    
+    @PersistenceContext(unitName = "auth_pu")
+    private EntityManager em;
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
+    }
 
     @Override
     public void update(ApiToken entity) {

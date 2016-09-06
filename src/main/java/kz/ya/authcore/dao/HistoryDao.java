@@ -7,6 +7,7 @@ package kz.ya.authcore.dao;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import kz.ya.authcore.entity.History;
 
 /**
@@ -15,6 +16,14 @@ import kz.ya.authcore.entity.History;
  */
 @Stateless
 public class HistoryDao extends AbstractDao<Long, History> implements HistoryDaoLocal {
+    
+    @PersistenceContext(unitName = "auth_pu")
+    private EntityManager em;
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
+    }
 
     @Override
     public void update(History entity) {

@@ -28,21 +28,22 @@ public abstract class AbstractDao<PK extends Serializable, T> {
         this.entityClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
     }
 
-    private static final EntityManagerFactory EMFACTORY;
-
-    static {
-        try {
-            EMFACTORY = Persistence.createEntityManagerFactory("auth_pu");
-
-        } catch (Throwable ex) {
-            System.err.println("Initial SessionFactory creation failed." + ex);
-            throw new ExceptionInInitializerError(ex);
-        }
-    }
-
-    public static EntityManager getEntityManager() {
-        return EMFACTORY.createEntityManager();
-    }
+//    private static final EntityManagerFactory EMFACTORY;
+//
+//    static {
+//        try {
+//            EMFACTORY = Persistence.createEntityManagerFactory("auth_pu");
+//
+//        } catch (Throwable ex) {
+//            System.err.println("Initial SessionFactory creation failed." + ex);
+//            throw new ExceptionInInitializerError(ex);
+//        }
+//    }
+//
+//    public static EntityManager getEntityManager() {
+//        return EMFACTORY.createEntityManager();
+//    }
+    protected abstract EntityManager getEntityManager();
 
     public T save(T entity) {
         if (!constraintValidationsDetected(entity)) {

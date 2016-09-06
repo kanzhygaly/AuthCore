@@ -8,8 +8,8 @@ package kz.ya.authcore.dao;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import static kz.ya.authcore.dao.AbstractDao.getEntityManager;
 import kz.ya.authcore.entity.User;
 
 /**
@@ -18,6 +18,14 @@ import kz.ya.authcore.entity.User;
  */
 @Stateless
 public class UserDao extends AbstractDao<Long, User> implements UserDaoLocal {
+    
+    @PersistenceContext(unitName = "auth_pu")
+    private EntityManager em;
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
+    }
     
     @Override
     public void update(User entity) {
