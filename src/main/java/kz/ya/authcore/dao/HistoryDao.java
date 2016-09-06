@@ -16,7 +16,7 @@ import kz.ya.authcore.entity.History;
  */
 @Stateless
 public class HistoryDao extends AbstractDao<Long, History> implements HistoryDaoLocal {
-    
+
     @PersistenceContext(unitName = "auth_pu")
     private EntityManager em;
 
@@ -27,18 +27,9 @@ public class HistoryDao extends AbstractDao<Long, History> implements HistoryDao
 
     @Override
     public void update(History entity) {
-        EntityManager entityManager = getEntityManager();
-        try {
-            entityManager.getTransaction().begin();
-
-            History fromDB = (History) entityManager.find(History.class, entity.getId());
-            fromDB.setValue(entity.getValue());
-            fromDB.setDateIssue(entity.getDateIssue());
-            fromDB.setDateExpire(entity.getDateExpire());
-
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-        }
+        History fromDB = findForUpdate(entity.getId());
+        fromDB.setValue(entity.getValue());
+        fromDB.setDateIssue(entity.getDateIssue());
+        fromDB.setDateExpire(entity.getDateExpire());
     }
 }

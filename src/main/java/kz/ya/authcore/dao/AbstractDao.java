@@ -6,9 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
-import javax.persistence.Persistence;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -28,35 +26,11 @@ public abstract class AbstractDao<PK extends Serializable, T> {
         this.entityClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
     }
 
-//    private static final EntityManagerFactory EMFACTORY;
-//
-//    static {
-//        try {
-//            EMFACTORY = Persistence.createEntityManagerFactory("auth_pu");
-//
-//        } catch (Throwable ex) {
-//            System.err.println("Initial SessionFactory creation failed." + ex);
-//            throw new ExceptionInInitializerError(ex);
-//        }
-//    }
-//
-//    public static EntityManager getEntityManager() {
-//        return EMFACTORY.createEntityManager();
-//    }
     protected abstract EntityManager getEntityManager();
 
     public T save(T entity) {
         if (!constraintValidationsDetected(entity)) {
-            EntityManager entityManager = getEntityManager();
-            try {
-                entityManager.getTransaction().begin();
-
-                entity = entityManager.merge(entity);
-
-                entityManager.getTransaction().commit();
-            } catch (Exception ex) {
-                entityManager.getTransaction().rollback();
-            }
+            getEntityManager().persist(entity);
         }
         return entity;
     }
@@ -65,16 +39,7 @@ public abstract class AbstractDao<PK extends Serializable, T> {
 
     public void delete(T entity) {
         if (!constraintValidationsDetected(entity)) {
-            EntityManager entityManager = getEntityManager();
-            try {
-                entityManager.getTransaction().begin();
-
-                entityManager.remove(entity);
-
-                entityManager.getTransaction().commit();
-            } catch (Exception ex) {
-                entityManager.getTransaction().rollback();
-            }
+            getEntityManager().remove(entity);
         }
     }
 

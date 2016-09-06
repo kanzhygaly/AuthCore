@@ -85,7 +85,7 @@ public class User implements Externalizable {
         return token;
     }
 
-    public void setToken(ApiToken token) {
+    public void addToken(ApiToken token) {
         token.setUser(this);
         this.token = token;
     }

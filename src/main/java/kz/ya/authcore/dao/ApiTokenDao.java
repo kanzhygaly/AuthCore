@@ -19,7 +19,7 @@ import kz.ya.authcore.entity.User;
  */
 @Stateless
 public class ApiTokenDao extends AbstractDao<User, ApiToken> implements ApiTokenDaoLocal {
-    
+
     @PersistenceContext(unitName = "auth_pu")
     private EntityManager em;
 
@@ -30,19 +30,10 @@ public class ApiTokenDao extends AbstractDao<User, ApiToken> implements ApiToken
 
     @Override
     public void update(ApiToken entity) {
-        EntityManager entityManager = getEntityManager();
-        try {
-            entityManager.getTransaction().begin();
-
-            ApiToken fromDB = (ApiToken) entityManager.find(ApiToken.class, entity.getUser());
-            fromDB.setValue(entity.getValue());
-            fromDB.setDateIssue(entity.getDateIssue());
-            fromDB.setDateExpire(entity.getDateExpire());
-
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-        }
+        ApiToken fromDB = findForUpdate(entity.getUser());
+        fromDB.setValue(entity.getValue());
+        fromDB.setDateIssue(entity.getDateIssue());
+        fromDB.setDateExpire(entity.getDateExpire());
     }
 
     @Override

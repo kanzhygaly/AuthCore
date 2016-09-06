@@ -18,7 +18,7 @@ import kz.ya.authcore.entity.User;
  */
 @Stateless
 public class UserDao extends AbstractDao<Long, User> implements UserDaoLocal {
-    
+
     @PersistenceContext(unitName = "auth_pu")
     private EntityManager em;
 
@@ -26,21 +26,12 @@ public class UserDao extends AbstractDao<Long, User> implements UserDaoLocal {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
     @Override
     public void update(User entity) {
-        EntityManager entityManager = getEntityManager();
-        try {
-            entityManager.getTransaction().begin();
-
-            User fromDB = (User) entityManager.find(User.class, entity.getId());
-            fromDB.setEmail(entity.getEmail());
-            fromDB.setPassword(entity.getPassword());
-
-            entityManager.getTransaction().commit();
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-        }
+        User fromDB = findForUpdate(entity.getId());
+        fromDB.setEmail(entity.getEmail());
+        fromDB.setPassword(entity.getPassword());
     }
 
     @Override

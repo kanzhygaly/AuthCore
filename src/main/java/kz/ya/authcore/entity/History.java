@@ -16,7 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -35,7 +35,7 @@ public class History implements Externalizable {
     @Column(name = "id")
     private Long id;
     
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
     
@@ -66,6 +66,7 @@ public class History implements Externalizable {
         this.value = value;
         this.dateIssue = dateIssue;
         this.dateExpire = dateExpire;
+        this.created = new Date();
     }
 
     public Long getId() {

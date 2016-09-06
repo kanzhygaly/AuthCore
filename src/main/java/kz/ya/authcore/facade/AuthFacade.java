@@ -10,9 +10,11 @@ import java.util.UUID;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.security.auth.login.LoginException;
+import kz.ya.authcore.dao.HistoryDaoLocal;
 import kz.ya.authcore.entity.ApiToken;
 import kz.ya.authcore.entity.User;
 import kz.ya.authcore.dao.UserDaoLocal;
+import kz.ya.authcore.entity.History;
 
 /**
  *
@@ -23,6 +25,10 @@ public class AuthFacade implements AuthFacadeLocal {
 
     @EJB
     private UserDaoLocal userDao;
+    @EJB
+    private HistoryDaoLocal historyDao;
+//    @EJB
+//    private ApiTokenDaoLocal apiTokenDao;
 
     @Override
     public ApiToken login(String username, String password) throws LoginException {
@@ -36,19 +42,34 @@ public class AuthFacade implements AuthFacadeLocal {
              * will be stored in the DB. The authToken will be needed for every
              * remote request and is only valid within the login session
              */
-            String authToken = UUID.randomUUID().toString();
-            if (user.getToken() == null) {
-                user.setToken(new ApiToken(user));
+            if (user.getToken() != null) {
+                // save current token to history
+                History history = new History(user, user.getToken().getValue(), 
+                        user.getToken().getDateIssue(), user.getToken().getDateExpire());
+                historyDao.save(history);
+                
+                // remove current token
+                user.removeToken();
+//                apiTokenDao.delete(user.getToken());
             }
-            user.getToken().setValue(authToken);
+            
+            // create new token
+            ApiToken token = new ApiToken(user);
+            
+            String authToken = UUID.randomUUID().toString();
+            token.setValue(authToken);
 
             // set issue date to current time
             Calendar calendar = Calendar.getInstance();
-            user.getToken().setDateIssue(calendar.getTime());
+            token.setDateIssue(calendar.getTime());
 
             // set expiration date as after 14 days from now
             calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 14);
-            user.getToken().setDateExpire(calendar.getTime());
+            token.setDateExpire(calendar.getTime());
+            
+            // add token to user
+            user.addToken(token);
+            userDao.update(user);
 
             return user.getToken();
         }
