@@ -1,3 +1,5 @@
+<!-- JTA vs RESOURCE_LOCAL http://stackoverflow.com/questions/17331024/persistence-xml-different-transaction-type-attributes -->
+
 <datasources xmlns="http://www.jboss.org/ironjacamar/schema"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://www.jboss.org/ironjacamar/schema http://docs.jboss.org/ironjacamar/schema/datasources_1_0.xsd">
