@@ -30,7 +30,7 @@ public abstract class AbstractDao<PK extends Serializable, T> {
 
     public T save(T entity) {
         if (!constraintValidationsDetected(entity)) {
-            getEntityManager().persist(entity);
+            entity = getEntityManager().merge(entity);
         }
         return entity;
     }
